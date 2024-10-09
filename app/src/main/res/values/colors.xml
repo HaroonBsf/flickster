@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="dummy_black">#242323</color>
+    <color name="progress_bg">#204529</color>
+    <color name="high_progress">#21CF7A</color>
+    <color name="hint_color">#909090</color>
+</resources>
