@@ -4,7 +4,7 @@
     <item android:id="@android:id/background">
         <shape
             android:shape="ring"
-            android:thickness="2dp"
+            android:thickness="1.5dp"
             android:useLevel="false">
             <solid android:color="@color/progress_bg" />
         </shape>
@@ -16,7 +16,7 @@
             android:toDegrees="270">
             <shape
                 android:shape="ring"
-                android:thickness="2dp"
+                android:thickness="1.5dp"
                 android:useLevel="true">
                 <solid android:color="@color/high_progress" />
         </shape>

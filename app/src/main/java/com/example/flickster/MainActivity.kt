@@ -1,26 +1,20 @@
 package com.example.flickster
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flickster.adapter.MoviesAdapter
 import com.example.flickster.databinding.ActivityMainBinding
-import com.example.flickster.moviesmodel.PopularMoviesResponse
-import com.example.flickster.retrofit.MoviesAPInterface
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.flickster.repository.MoviesRepository
+import com.example.flickster.repository.MoviesViewModel
+import com.example.flickster.repository.MoviesViewModelFactory
 import java.util.Timer
 import kotlin.concurrent.timerTask
 
@@ -29,10 +23,9 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-    private lateinit var moviesAdapter: MoviesAdapter
-
-    private val apiKey =
-        "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYWFiZWZjNTIxMjQ2NGY3YmRkOWRlN2FjNjJmZDI5YyIsIm5iZiI6MTcyNzYyNzgxMC45Mjk4MjIsInN1YiI6IjY2ZjY4ODI5NmM5YTY4MTU1MDcwYzI4YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.AY6_7kkR757IkG19ULkyzUwVaQZ6ECcCgPEXALObk9g"
+    private val moviesViewModel: MoviesViewModel by viewModels {
+        MoviesViewModelFactory(MoviesRepository(RetrofitClient.getMoviesAPi()))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,90 +38,50 @@ class MainActivity : AppCompatActivity() {
         }
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvTrending.layoutManager = layoutManager
+        binding.rvTrendingSlider.layoutManager = layoutManager
+        binding.rvTrendingSlider.setHasFixedSize(true)
+        val layoutManager1 = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTrending.layoutManager = layoutManager1
         binding.rvTrending.setHasFixedSize(true)
         val layoutManager2 = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.rvPopular.layoutManager = layoutManager2
         binding.rvPopular.setHasFixedSize(true)
 
-        val client = OkHttpClient.Builder()
-            .addInterceptor { chain: Interceptor.Chain ->
-                val request: Request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer $apiKey")
-                    .build()
-                chain.proceed(request)
-            }
-            .build()
+        moviesViewModel.getPopularMovies(1)
+        moviesViewModel.getTrendingMovies(1)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/")
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(MoviesAPInterface::class.java)
-
-
-        getTrendingMovies(retrofit, layoutManager)
-        getPopularMovies(retrofit)
-
-
-    }
-
-    private fun getPopularMovies(retrofit: MoviesAPInterface) {
-        val call = retrofit.getPopularMovies(1)
-        call.enqueue(object : Callback<PopularMoviesResponse> {
-            override fun onResponse(
-                call: Call<PopularMoviesResponse>,
-                response: Response<PopularMoviesResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val movies = response.body()?.results ?: emptyList()
-                    moviesAdapter = MoviesAdapter(this@MainActivity, movies, "popular")
-                    binding.rvPopular.adapter = moviesAdapter
-                }
-            }
-
-            override fun onFailure(call: Call<PopularMoviesResponse>, t: Throwable) {
-                Log.e("Error", "Failed to fetch movies: ${t.message}")
+        moviesViewModel.popularMovies.observe(this, Observer { response ->
+            response?.let {
+                val adapter = MoviesAdapter(this, it.results, "popular")
+                binding.rvPopular.adapter = adapter
             }
         })
-    }
+        moviesViewModel.trendingMovies.observe(this, Observer { response ->
+            response?.let {
+                val adapter = MoviesAdapter(this, it.results, "popular")
+                binding.rvTrending.adapter = adapter
+                val sliderAdapter = MoviesAdapter(this, it.results, "trending")
+                binding.rvTrendingSlider.adapter = sliderAdapter
 
-    private fun getTrendingMovies(retrofit: MoviesAPInterface, layoutManager: LinearLayoutManager) {
-        val call = retrofit.getTrendingMovies(1)
-        call.enqueue(object : Callback<PopularMoviesResponse> {
-            override fun onResponse(
-                call: Call<PopularMoviesResponse>,
-                response: Response<PopularMoviesResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val movies = response.body()?.results ?: emptyList()
-                    moviesAdapter = MoviesAdapter(this@MainActivity, movies, "trending")
-                    binding.rvTrending.adapter = moviesAdapter
+                /*val snapHelper = LinearSnapHelper()
+                snapHelper.attachToRecyclerView(binding.rvTrendingSlider)
+                val timer = Timer()
+                timer.schedule(timerTask {
+                    if (layoutManager.findLastCompletelyVisibleItemPosition() < (adapter.itemCount - 1)) {
+                        layoutManager.smoothScrollToPosition(
+                            binding.rvTrendingSlider,
+                            RecyclerView.State(),
+                            layoutManager.findLastCompletelyVisibleItemPosition() + 1
+                        )
+                    } else {
+                        layoutManager.smoothScrollToPosition(
+                            binding.rvTrendingSlider,
+                            RecyclerView.State(),
+                            0
+                        )
+                    }
+                }, 0, 3000)*/
 
-                    val snapHelper = LinearSnapHelper()
-                    snapHelper.attachToRecyclerView(binding.rvTrending)
-                    val timer = Timer()
-                    timer.schedule(timerTask {
-                        if (layoutManager.findLastCompletelyVisibleItemPosition() < (moviesAdapter.itemCount - 1)) {
-                            layoutManager.smoothScrollToPosition(
-                                binding.rvTrending,
-                                RecyclerView.State(),
-                                layoutManager.findLastCompletelyVisibleItemPosition() + 1
-                            )
-                        } else {
-                            layoutManager.smoothScrollToPosition(
-                                binding.rvTrending,
-                                RecyclerView.State(),
-                                0
-                            )
-                        }
-                    }, 0, 3000)
-                }
-            }
-
-            override fun onFailure(call: Call<PopularMoviesResponse>, t: Throwable) {
-                Log.e("Error", "Failed to fetch movies: ${t.message}")
             }
         })
     }

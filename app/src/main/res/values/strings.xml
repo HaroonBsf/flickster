@@ -3,4 +3,5 @@
     <string name="search_movies">Search Movies...</string>
     <string name="popular_movies">Popular Movies</string>
     <string name="percent">%</string>
+    <string name="trending_now">Trending Now</string>
 </resources>

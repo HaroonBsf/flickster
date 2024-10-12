@@ -28,7 +28,7 @@
             <ImageView
                 android:id="@+id/sliderImage"
                 android:layout_width="100dp"
-                android:layout_height="170dp"
+                android:layout_height="150dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/dummy_image"
                 app:imageUrl="@{popularMovies.poster_path}" />
@@ -37,8 +37,8 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/rating"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:backgroundTint="@color/dummy_black"
             app:cardCornerRadius="100dp"
             android:layout_marginStart="10dp"
@@ -48,8 +48,8 @@
 
             <ProgressBar
                 android:id="@+id/popularRatingProgress"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:indeterminateOnly="false"
                 app:progressVoteAverage="@{popularMovies.vote_average}"
@@ -65,11 +65,11 @@
                     android:id="@+id/txtRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
                     app:textVoteAverage="@{popularMovies.vote_average}"
                     android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    tools:ignore="SmallSp" />
 
                 <TextView
                     android:id="@+id/txtPercent"
@@ -78,7 +78,7 @@
                     android:gravity="top"
                     android:text="@string/percent"
                     android:textColor="@color/white"
-                    android:textSize="8sp"
+                    android:textSize="7sp"
                     tools:ignore="SmallSp" />
 
             </LinearLayout>
@@ -95,7 +95,6 @@
             android:paddingHorizontal="3dp"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintEnd_toEndOf="@+id/cardView"
