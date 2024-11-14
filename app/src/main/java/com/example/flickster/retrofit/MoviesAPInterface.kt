@@ -7,15 +7,14 @@ import retrofit2.http.Query
 interface MoviesAPInterface {
 
     @GET("3/trending/movie/day")
-    fun getTrendingMovies(
+    suspend fun getTrendingMovies(
         @Query("page") page: Int
     )
-            : retrofit2.Call<PopularMoviesResponse>
+            : PopularMoviesResponse
 
     @GET("3/movie/popular")
-    fun getPopularMovies(
+    suspend fun getPopularMovies(
         @Query("page") page: Int
     )
-            : retrofit2.Call<PopularMoviesResponse>
-
+            : PopularMoviesResponse
 }

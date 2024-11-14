@@ -66,9 +66,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
     //noinspection UseTomlInstead
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
-
-
-
-
+    //noinspection UseTomlInstead
+    implementation ("com.intuit.sdp:sdp-android:1.1.1")
 
 }

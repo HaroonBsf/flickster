@@ -43,6 +43,7 @@ class MoviesAdapter(
             is RvTrendingSliderBinding -> {
                 holder.binding.movie = movie
             }
+
             is RvPopularItemBinding -> {
                 (holder.binding as RvPopularItemBinding).popularMovies = movie
             }

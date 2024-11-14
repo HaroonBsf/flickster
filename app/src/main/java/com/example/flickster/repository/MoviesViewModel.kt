@@ -1,5 +1,6 @@
 package com.example.flickster.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,7 @@ class MoviesViewModel(private val repository: MoviesRepository) : ViewModel() {
             val response = repository.fetchPopularMovies(page)
             response?.let {
                 _popularMovies.postValue(it)
+                Log.d("THREAD", "ViewModel Popular running on-${Thread.currentThread().name} thread")
             }
         }
     }
@@ -29,6 +31,7 @@ class MoviesViewModel(private val repository: MoviesRepository) : ViewModel() {
             val response = repository.fetchTrendingMovies(page)
             response?.let {
                 _trendingMovies.postValue(it)
+                Log.d("THREAD", "ViewModel Trending running on-${Thread.currentThread().name} thread")
             }
         }
     }
