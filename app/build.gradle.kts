@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.flickster"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.flickster"
@@ -28,11 +28,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures{
         //noinspection DataBindingWithoutKapt
@@ -58,9 +58,9 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     //noinspection UseTomlInstead
     implementation ("com.github.bumptech.glide:glide:4.16.0")
-    //noinspection UseTomlInstead
+    //noinspection GradleDependency,UseTomlInstead
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    //noinspection UseTomlInstead
+    //noinspection GradleDependency,UseTomlInstead
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
     //noinspection UseTomlInstead
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
@@ -68,5 +68,4 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
     //noinspection UseTomlInstead
     implementation ("com.intuit.sdp:sdp-android:1.1.1")
-
 }

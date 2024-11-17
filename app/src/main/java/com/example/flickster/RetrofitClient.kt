@@ -29,5 +29,4 @@ object RetrofitClient {
     fun getMoviesAPi(): MoviesAPInterface{
         return retrofit.create(MoviesAPInterface::class.java)
     }
-
 }
